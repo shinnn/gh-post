@@ -5,18 +5,39 @@ const test = require('tape');
 
 process.env.GITHUB_TOKEN = '';
 
-test('ghPost()', t => {
-  t.plan(2);
+test('ghPost()', async t => {
+	try {
+		await ghPost('lipsum', {
+			userAgent: 'Shinnosuke Watanabe https://github.com/shinnn',
+			verbose: true,
+			token: process.env.TOKEN_FOR_TEST
+		});
+		t.fail('Unexpectedly succeeded.');
+	} catch ({response}) {
+		t.equal(response.request.method, 'POST', 'should create a POST request.');
+	}
 
-  t.equal(ghPost.name, 'ghPost', 'should have a function name.');
+	try {
+		await ghPost();
+		t.fail('Unexpectedly succeeded.');
+	} catch (err) {
+		t.equal(
+			err.toString(),
+			'RangeError: Expected 2 arguments (<string>, <Object>), but got no arguments.',
+			'should fail when it takes no arguments.'
+		);
+	}
 
-  ghPost('lipsum', {
-    headers: {
-      'user-agent': 'Shinnosuke Watanabe https://github.com/shinnn'
-    },
-    verbose: true,
-    token: process.env.TOKEN_FOR_TEST
-  }).then(t.fail, err => {
-    t.strictEqual(err.response.request.method, 'POST', 'should create a POST request.');
-  }).catch(t.fail);
+	try {
+		await ghPost(1, 2, 3);
+		t.fail('Unexpectedly succeeded.');
+	} catch (err) {
+		t.equal(
+			err.toString(),
+			'RangeError: Expected 2 arguments (<string>, <Object>), but got 3 arguments.',
+			'should fail when it takes too many arguments.'
+		);
+	}
+
+	t.end();
 });

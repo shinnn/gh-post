@@ -11,5 +11,5 @@ module.exports = async function ghPost(...args) {
 		} arguments.`);
 	}
 
-	return ghGet(args[0], Object.assign({}, args[1], {method: 'POST'})); // eslint-disable-line prefer-object-spread
+	return ghGet(args[0], {...args[1], method: 'POST'});
 };

@@ -2,9 +2,7 @@ branches:
   except: /^v\d/
 language: node_js
 node_js: node
+after_script: node_modules/.bin/nyc report | npx coveralls
 env:
   global:
     secure: B55RFssGZUAG4HL8eyx+GQIF/0NzR/GX1E7eFE4vnOZBmZ0BLaEiTo99qjQqudaYpOxAY1MHNRkfVYM3G7Es2FtIHNUdu/30c9PwkN2wZidfZInY8qaHS1kXhrhQjB+4W4iL+MIXB4QOkAvvyRmaLXYIL9okvrvNazE7kE/Gme1hfO27XwZv+FV29wqQO/TFalRtkkfxvDrZDCjKrlyw6ay/w2xgF0S3bRavUBio7L9d458qID5ytwNQL2ttPC7ALyYmw737mbCxUe1ilX9/juPL4joolaKa3uuFsZ+OYc7g1UPmj12uV4rhXV8j7LScdAy8Ox0ouROKZYv+gZ9ClOqnh6Mvx9ZF941SOi1lY4NIZxFmxB8ginOUVBN8VkDm9v5h0oD7ZG+/D22fQYyA+Vb1ntXNcL12Q88zf3ErnHyB+2Lr2hhxpRiefo+fxCjfrOgLpQrkV9TRDWg8E/pI0LbQi8lXqIrSTqsAqvf/3ZPlIkNeqiOsdWIbot4u2lDxdPlreaSCmIo6HohEq0wkXn7ZCWp2WiowtKbgXfXlNo4Mbd2m+tE9pq50sbYZUlkkvDMOT9RnO/ulmOJARxeULJ3nH7fuHFKMdXDXsRHJr8+Yx/xt/Qk9f4mCcjLYNZOARzQ32c5wmXFvKSfRxZiZXwo2wJ5JS4osRUmVzgAiE3E=
-after_script:
-  - npm install istanbul-coveralls
-  - node node_modules/.bin/istanbul-coveralls

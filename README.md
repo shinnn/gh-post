@@ -4,28 +4,14 @@
 [![Build Status](https://travis-ci.org/shinnn/gh-post.svg?branch=master)](https://travis-ci.org/shinnn/gh-post)
 [![Coverage Status](https://img.shields.io/coveralls/shinnn/gh-post.svg)](https://coveralls.io/github/shinnn/gh-post?branch=master)
 
-A [Node](https://nodejs.org/) module to create a [`POST`](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.5) request to the [Github API](https://developer.github.com/v3/)
+A [Node.js](https://nodejs.org/) module to create a POST request to GitHub GraphQL API v4
 
 ```javascript
-const ghPost = require('gh-post');
+const getMode = require('gh-post');
 
 (async () => {
-  const response = await ghPost('gists', {
-    headers: {
-      'user-agent': 'your application name'
-    },
-    token: 'your access token',
-    body: {
-      files: {
-        'file1.txt': {
-          content: 'Hi'
-        }
-      }
-    }
-  });
-
-  response.headers.status; //=> '201 Created'
-  response.headers.location; //=> for example 'https://api.github.com/gists/6ba9f11f4e1acf13645'
+  const mode = getMode('index.js'); //=> 33188
+  mode.toString(8); //=> '100644'
 })();
 ```
 
@@ -40,19 +26,34 @@ npm install gh-post
 ## API
 
 ```javascript
-const ghPost = require('gh-post');
+const getMode = require('gh-post');
 ```
 
-### ghPost(*url*, *options*)
+### getMode(*path* [, *option*])
 
-*url*: `string` ("path" part of a Github API URL)  
-*options*: `Object` ([`gh-get` options](https://github.com/shinnn/gh-get#options))  
-Return: `Object` ([`Promise`](https://promisesaplus.com/) instance)
+*path*: `string` `Buffer` `URL` (file, directory or symbolic link path)  
+*option*: `Object`  
+Return: `Promise<Integer>`
 
-Almost the same as [gh-get](https://github.com/shinnn/gh-get), except that the `method` option defaults to `'POST'` and unchangable.
+#### option.followSymlinks
+
+Type: `boolean`  
+Default: `false`
+
+Whether to resolve all symbolic links before checking the mode, or get the mode of the symbolic link file itself.
+
+```javascript
+(async () => {
+  (await getMode('./symlink-to-directory')).toString(8);
+  //=> '120755'
+
+  (await getMode('./symlink-to-directory', {followSymlinks: true})).toString(8);
+  //=> '40755'
+})();
+```
 
 ## License
 
-Copyright (c) 2015 - 2018 [Shinnosuke Watanabe](https://github.com/shinnn)
+Copyright (c) 2015 - 2016 [Shinnosuke Watanabe](https://github.com/shinnn)
 
 Licensed under [the MIT License](./LICENSE).
